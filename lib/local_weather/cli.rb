@@ -8,12 +8,13 @@ class LocalWeather::CLI
     puts "Enter your local zip code to check weather: ".green
     zip = get_zip
     puts "here is your zip: #{zip}"
-    scrape
+    scrape(zip)
     menu
   end
 
-  def scrape
+  def scrape(zip_code)
     # get scraped data from site and return hash?
+    doc = LocalWeather::Scraper.get_site(zip_code)
     @data = ["current weather", "3 day forecast", "hourly"]
   end
 
