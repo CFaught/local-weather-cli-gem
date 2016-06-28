@@ -1,7 +1,13 @@
 require_relative "../local_weather.rb"
 require "colorize"
+require "pry"
 
 class LocalWeather::CLI
+  # This is the CLI class that acts as the menu and asks for a zip code
+  # to scrape the weather data from Weather Channel using LocalWeather::Scraper
+  # the main entry point for the program used by the executable in bin/local_weather
+  # is LocalWeather::CLI.new.call
+
   attr_accessor :data
 
   def call
@@ -15,7 +21,8 @@ class LocalWeather::CLI
   def scrape(zip_code)
     # get scraped data from site and return hash?
     doc = LocalWeather::Scraper.get_site(zip_code)
-    @data = ["current weather", "3 day forecast", "hourly"]
+    binding.pry
+    @data = ["current weather", "hourly", "10 day forecast"]
   end
 
   def get_zip

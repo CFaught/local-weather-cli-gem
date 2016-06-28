@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# this is the main executable that initializes the LocalWeather::CLI
+
 require_relative "../lib/local_weather.rb"
 
 
