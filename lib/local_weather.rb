@@ -1,5 +1,2 @@
-require "local_weather/version"
-
-module LocalWeather
-  # Your code goes here...
-end
+require_relative "./local_weather/version"
+require_relative "./local_weather/cli"
