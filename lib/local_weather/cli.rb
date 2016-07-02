@@ -21,6 +21,8 @@ class LocalWeather::CLI
   def scrape(zip_code)
     # get scraped data from site and return hash?
     doc = LocalWeather::Scraper.get_site(zip_code)
+    LocalWeather::Scraper.scrape_weather("doc")
+
     # binding.pry
     @data = ["current weather", "hourly", "10 day forecast"]
   end
