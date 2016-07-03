@@ -20,8 +20,7 @@ class LocalWeather::Scraper
     file_html.close
 
 
-    page.html
-
+    page.driver.quit
   end
 
 
