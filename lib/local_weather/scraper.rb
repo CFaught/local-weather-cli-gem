@@ -1,5 +1,5 @@
-require_relative "../local_weather.rb"
-require_relative "../../config/environment.rb"
+# require_relative "../local_weather.rb"
+# require_relative "../../config/environment.rb"
 
 class LocalWeather::Scraper
   # This class is the scraper used by the CLI class to pull
@@ -7,37 +7,60 @@ class LocalWeather::Scraper
   # Weather Channel.com by zip code passed in from the CLI.
   extend Capybara::DSL
 
-  BASE_URL = "https://weather.com/weather/today/l/"
-
-  def self.get_site(zip)
-
-    visit BASE_URL + zip
+  def self.get_today(zip)
+    visit "https://weather.com/weather/today/l/" + zip
 
     sleep(1)
 
-    file_html = open("fixtures/weather.html", "w")
+    file_html = open("fixtures/weather_today.html", "w")
     file_html.write(page.html)
     file_html.close
 
+  end
 
-    page.driver.quit
+  def self.get_hourly(zip)
+
+    visit "https://weather.com/weather/hourbyhour/l/" + zip
+
+    sleep(1)
+
+    file_html = open("fixtures/weather_hourly.html", "w")
+    file_html.write(page.html)
+    file_html.close
+
+    page.html
   end
 
 
-  def self.scrape_weather(site)
-    weather_options_array = []
+  def self.scrape_weather_today
 
-    # doc = Nokogiri::HTML(site)
-    html = open("fixtures/weather.html").read
+
+    html = open("fixtures/weather_today.html").read
     doc = Nokogiri::HTML(html)
 
     puts
-    puts doc.css(".today_nowcard-temp").text.strip
+    temp = doc.css(".today_nowcard-temp").text.strip
+    puts "#{temp[/\d+/].to_i}°F"
     puts doc.css(".today_nowcard-phrase").text
-    puts doc.css(".today-daypart-precip").text
+    precip_string = doc.css(".today-daypart-precip").text
+    precip_arr = precip_string.split("\n").map! { |precip| precip.strip }
+    precip_arr.reject! { |e| e.empty? }
+    puts "#{precip_arr[0]} chance of precipitation."
     puts
+  end
 
-    # weather_options_array
+  def self.get_menu_options
+    weather_options_array = []
+
+    html = open("fixtures/weather.html").read
+    doc = Nokogiri::HTML(html)
+
+
+    weather_options_array
+  end
+
+  def self.quit_session
+    page.driver.quit
   end
 end
 

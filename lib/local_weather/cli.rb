@@ -1,6 +1,4 @@
-require_relative "../local_weather.rb"
-require "colorize"
-require "pry"
+# require_relative "../local_weather.rb"
 
 class LocalWeather::CLI
   # This is the CLI class that acts as the menu and asks for a zip code
@@ -10,22 +8,30 @@ class LocalWeather::CLI
 
   attr_accessor :data
 
-  def call
-    puts "Enter your local zip code to check weather: ".green
-    zip = get_zip
-    puts "here is your zip: #{zip}"
-    scrape(zip)
-    menu
-  end
-
-  def scrape(zip_code)
-    # get scraped data from site and return hash?
-    doc = LocalWeather::Scraper.get_site(zip_code)
-    LocalWeather::Scraper.scrape_weather("doc")
-
-    # binding.pry
+  def initialize
     @data = ["current weather", "hourly", "10 day forecast"]
   end
+
+  def call
+    welcome_screen
+    zip = get_zip
+    menu(zip)
+
+    LocalWeather::Scraper.quit_session
+  end
+
+  def welcome_screen
+    puts
+    puts
+    puts "Local Weather Forecast powered by Ruby!".green
+    puts "Enter your local zip code to check weather: ".green
+  end
+
+  # def scrape_today(zip_code)
+  #   # get scraped data from site and return hash?
+  #   LocalWeather::Scraper.get_today(zip_code)
+  #   LocalWeather::Scraper.scrape_weather
+  # end
 
   def get_zip
     input = gets.chomp
@@ -39,7 +45,7 @@ class LocalWeather::CLI
     input
   end
 
-  def menu
+  def menu(zip_code)
     input = nil
     while input != "exit" && input != "quit"
       puts "Enter option for more detail: "
@@ -50,10 +56,12 @@ class LocalWeather::CLI
 
       case input
       when "1"
-        puts "Current local weather"
-        puts "Temp: 91°F"
-        puts "Humidity: 60%"
-        puts "Chance of Precipitation: 35%"
+        LocalWeather::Scraper.get_today(zip_code)
+        puts
+        puts
+        puts "Current local weather for #{zip_code}"
+        puts
+        LocalWeather::Scraper.scrape_weather_today
       when "2"
         puts "3 day forecast"
         puts "Monday: Partly Cloudy, 34% chance of precipitation"
