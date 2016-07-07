@@ -9,12 +9,13 @@ class LocalWeather::CLI
   attr_accessor :data
 
   def initialize
-    @data = ["current weather", "hourly", "10 day forecast"]
+    @data = ["Current Weather", "Hourly", "10 Day Forecast", "Update Data/Check Different Zip"]
   end
 
   def call
     welcome_screen
     zip = get_zip
+    LocalWeather::Scraper.get_site_html(zip)
     menu(zip)
 
     LocalWeather::Scraper.quit_session
@@ -23,15 +24,10 @@ class LocalWeather::CLI
   def welcome_screen
     puts
     puts
-    puts "Local Weather Forecast powered by Ruby!".green
-    puts "Enter your local zip code to check weather: ".green
+    puts "Local Weather Forecast powered by Ruby!"
+    puts "Enter your local zip code to check weather: "
+    puts
   end
-
-  # def scrape_today(zip_code)
-  #   # get scraped data from site and return hash?
-  #   LocalWeather::Scraper.get_today(zip_code)
-  #   LocalWeather::Scraper.scrape_weather
-  # end
 
   def get_zip
     input = gets.chomp
@@ -49,30 +45,35 @@ class LocalWeather::CLI
     input = nil
     while input != "exit" && input != "quit"
       puts "Enter option for more detail: "
+      puts
       self.data.each_with_index do |option, index|
         puts "#{index + 1}. #{option}"
       end
+      puts
       input = gets.chomp.downcase
 
       case input
       when "1"
-        LocalWeather::Scraper.get_today(zip_code)
-        puts
         puts
         puts "Current local weather for #{zip_code}"
         puts
         LocalWeather::Scraper.scrape_weather_today
       when "2"
-        puts "3 day forecast"
-        puts "Monday: Partly Cloudy, 34% chance of precipitation"
-        puts "Tuesday: Clear, 10% chance of precipitation"
-        puts "Wednesday: Thunderstorms, 80% chance of precipitation"
+        puts
+        puts "Hourly forecast for #{zip_code}"
+        puts
+        LocalWeather::Scraper.scrape_weather_hourly
       when "3"
-        puts "Hourly forecast"
-        puts "1200: Partly Cloudy, 34% chance of precipitation"
-        puts "1300: Clear, 10% chance of precipitation"
-        puts "1400: Thunderstorms, 80% chance of precipitation"
-
+        puts
+        puts "10 day forecast for #{zip_code}"
+        puts
+        LocalWeather::Scraper.scrape_weather_ten_day
+      when "4"
+        puts
+        puts "Enter zip code: "
+        zip_code = gets.chomp
+        puts
+        LocalWeather::Scraper.get_site_html(zip_code)
       end
     end
   end

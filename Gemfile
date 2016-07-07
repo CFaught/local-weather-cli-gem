@@ -6,6 +6,5 @@ gemspec
 gem "colorize"
 gem "pry"
 gem "nokogiri"
-gem "phantomjs"
 gem "poltergeist"
 gem "capybara"

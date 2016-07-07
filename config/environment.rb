@@ -16,6 +16,7 @@ Capybara.register_driver :poltergeist do |app|
     debug:             false,
     js_errors:         false,
     inspector:         false,
+    timeout:           100,
     phantomjs_logger:  File.open("log/test_phantomjs.log", "w+"),
     phantomjs_options: ['--load-images=false', '--disk-cache=false', '--ignore-ssl-errors=true']
   )
